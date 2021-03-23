@@ -115,5 +115,6 @@ func main() {
 		log.Fatalf("Response error: %v", err)
 	}
 	defer response.Body.Close()
+	fmt.Printf("%v", response.Body)
 	fmt.Println("Successfully added label")
 }
