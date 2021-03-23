@@ -155,11 +155,23 @@ func main() {
 
 	responseBody := bytes.NewBuffer(labelResponse)
 
-	_, err = http.Post(URL.(string), "application/json", responseBody)
+	request, err := http.NewRequest("POST", URL.(string), responseBody)
+	if err != nil {
+		fmt.Println("couldn't make a new request")
+		os.Exit(1)
+	}
+
+	key := fmt.Sprintf("Bearer %v", os.Getenv("GITHUB_TOKEN"))
+	request.Header.Add("Authorization", key)
+	request.Header.Add("Accept", "application/vnd.github.v3+json")
+
+	response, err := http.DefaultClient.Do(request)
 
 	if err != nil {
 		fmt.Println("error")
 		os.Exit(1)
 	}
+	defer response.Body.Close()
+
 	fmt.Println("Successfully added label")
 }
