@@ -63,7 +63,7 @@ func getLabels(repositoryURL interface{}) ([]interface{}, error) {
 		// return error
 		fmt.Println(err)
 	}
-	fmt.Println(labels)
+	fmt.Printf("%s", labels)
 
 	return labels, nil
 }
