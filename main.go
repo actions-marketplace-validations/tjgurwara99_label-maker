@@ -50,7 +50,10 @@ func getLabels(repositoryURL interface{}) ([]interface{}, error) {
 
 	if err != nil {
 		// something
+		fmt.Println(err)
 	}
+
+	fmt.Println(body)
 
 	var labels []interface{}
 
@@ -58,7 +61,9 @@ func getLabels(repositoryURL interface{}) ([]interface{}, error) {
 
 	if err != nil {
 		// return error
+		fmt.Println(err)
 	}
+	fmt.Println(labels)
 
 	return labels, nil
 }
