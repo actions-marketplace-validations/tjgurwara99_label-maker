@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 )
 
 // Label struct for GitHub labels
@@ -20,7 +19,7 @@ type Label struct {
 }
 
 // GetLabels Get GitHub labels of the repository
-func GetLabels(repositoryURL string) ([]Label, error) {
+func GetLabels(repositoryURL string, token string) ([]Label, error) {
 	URL := fmt.Sprintf("%v/labels", repositoryURL)
 
 	request, err := http.NewRequest("GET", URL, nil)
@@ -28,14 +27,6 @@ func GetLabels(repositoryURL string) ([]Label, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Couldn't make a new request in GetLabel: %v", err)
 	}
-
-	token := os.Getenv("GITHUB_TOKEN")
-
-	if token == "" {
-		return nil, fmt.Errorf("Could get the environment variable GITHUB_TOKEN: %v", err)
-	}
-
-	token = fmt.Sprintf("bearer %v", token)
 
 	request.Header.Add("Authorization", token)
 	request.Header.Add("Accept", "application/vnd.github.v3+json")

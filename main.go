@@ -32,7 +32,7 @@ func main() {
 	err = json.Unmarshal(byteValue, &event)
 
 	if err != nil {
-		log.Fatalf("Error Unmarshalling the []byte of json payload to map[string]interface{}", err)
+		log.Fatalf("Error Unmarshalling the []byte of json payload to map[string]interface{}: %v", err)
 	}
 
 	issue, ok := event["issue"]
@@ -65,7 +65,7 @@ func main() {
 		log.Fatal("Issue payload is not of type map[string]interface{}")
 	}
 
-	token := os.Getenv("repo-token")
+	token := os.Getenv("TOKEN")
 
 	if token == "" {
 		log.Fatal("Couldn't get environment variable repo-token")
