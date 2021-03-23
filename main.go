@@ -7,10 +7,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"strings"
 )
 
-func getLabels(repositoryURL interface{}) ([]string, error) {
+func getLabels(repositoryURL interface{}) ([]map[string]interface{}, error) {
 
 	var url string
 
@@ -55,7 +54,7 @@ func getLabels(repositoryURL interface{}) ([]string, error) {
 
 	fmt.Println(body)
 
-	var labels []string
+	var labels []map[string]interface{}
 
 	err = json.Unmarshal(body, &labels)
 
@@ -134,20 +133,8 @@ func main() {
 
 	var updateLabels []string
 
-	for _, label := range labels {
-		var stringLabel string
-		switch label.(type) {
-		case map[string]interface{}:
-			stringLabel = label.(map[string]interface{})["name"].(string)
-			fmt.Println(stringLabel)
-			stringLabel = strings.TrimLeft(strings.TrimRight(stringLabel, ":"), ":")
-			if strings.Contains(issueTitle.(string), stringLabel) {
-				updateLabels = append(updateLabels, stringLabel)
-			}
-		default:
-			fmt.Println("error")
-			os.Exit(1)
-		}
+	for key, value := range labels {
+		fmt.Printf("%s %s\n", key, value)
 	}
 
 	fmt.Printf("%s\n", updateLabels)
