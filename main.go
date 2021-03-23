@@ -134,6 +134,7 @@ func main() {
 		switch label.(type) {
 		case map[string]interface{}:
 			stringLabel = label.(map[string]interface{})["name"].(string)
+			fmt.Println(stringLabel)
 			stringLabel = strings.TrimLeft(strings.TrimRight(stringLabel, ":"), ":")
 			if strings.Contains(issueTitle.(string), stringLabel) {
 				updateLabels = append(updateLabels, stringLabel)
@@ -157,6 +158,8 @@ func main() {
 	responseBody := bytes.NewBuffer(labelResponse)
 
 	url := fmt.Sprintf("%s%s", URL.(string), "/labels")
+
+	fmt.Println(url)
 
 	request, err := http.NewRequest("POST", url, responseBody)
 	if err != nil {
