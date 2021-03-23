@@ -65,7 +65,15 @@ func main() {
 		log.Fatal("Issue payload is not of type map[string]interface{}")
 	}
 
-	labels, err := github.GetLabels(repositoryURL.(string)) // maybe add a check to make sure repositoryURL type is string
+	token := os.Getenv("repo-token")
+
+	if token == "" {
+		log.Fatal("Couldn't get environment variable repo-token")
+	}
+
+	token = fmt.Sprintf("bearer %v", token)
+
+	labels, err := github.GetLabels(repositoryURL.(string), token) // maybe add a check to make sure repositoryURL type is string
 
 	if err != nil {
 		log.Fatalf("Couldn't fetch labels: %v", err)
@@ -97,7 +105,7 @@ func main() {
 		log.Fatalf("Error write a new request with labels as buffer: %v", err)
 	}
 
-	key := fmt.Sprintf("Bearer %v", os.Getenv("GITHUB_TOKEN"))
+	key := fmt.Sprintf("Bearer %v", os.Getenv("repo-token"))
 	request.Header.Add("Authorization", key)
 	request.Header.Add("Accept", "application/vnd.github.v3+json")
 
