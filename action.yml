@@ -1,9 +1,9 @@
 name: "Label Maker"
 description: "Makes labels for new issues"
+inputs:
+    token:
+        description: "Github token"
+        required: true
 runs:
     using: "docker"
     image: "Dockerfile"
-    inputs:
-        TOKEN:
-            description: "Github token"
-            required: true
