@@ -105,8 +105,7 @@ func main() {
 		log.Fatalf("Error write a new request with labels as buffer: %v", err)
 	}
 
-	key := fmt.Sprintf("Bearer %v", os.Getenv("repo-token"))
-	request.Header.Add("Authorization", key)
+	request.Header.Add("Authorization", token)
 	request.Header.Add("Accept", "application/vnd.github.v3+json")
 
 	response, err := http.DefaultClient.Do(request)
