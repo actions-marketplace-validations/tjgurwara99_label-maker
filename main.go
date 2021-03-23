@@ -129,7 +129,7 @@ func main() {
 		// something
 	}
 
-	var updateLabels []map[string]interface{}
+	var updateLabels []string
 
 	for _, label := range labels {
 		var stringLabel string
@@ -137,7 +137,7 @@ func main() {
 		case map[string]interface{}:
 			stringLabel = label.(map[string]interface{})["name"].(string)
 			if strings.Contains(issueTitle.(string), stringLabel) {
-				updateLabels = append(updateLabels, label.(map[string]interface{}))
+				updateLabels = append(updateLabels, stringLabel)
 			}
 		default:
 			fmt.Println("error")
