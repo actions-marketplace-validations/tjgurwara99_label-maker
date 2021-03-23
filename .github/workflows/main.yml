@@ -10,7 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Label Maker action step
+        uses: ./
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: ./
         
