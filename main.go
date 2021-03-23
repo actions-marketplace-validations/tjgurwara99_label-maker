@@ -134,6 +134,7 @@ func main() {
 		switch label.(type) {
 		case map[string]interface{}:
 			stringLabel = label.(map[string]interface{})["name"].(string)
+			stringLabel = strings.TrimLeft(strings.TrimRight(stringLabel, ":"), ":")
 			if strings.Contains(issueTitle.(string), stringLabel) {
 				updateLabels = append(updateLabels, stringLabel)
 			}
@@ -142,6 +143,8 @@ func main() {
 			os.Exit(1)
 		}
 	}
+
+	fmt.Println(updateLabels)
 
 	labelResponse, err := json.Marshal(map[string]interface{}{
 		"label": updateLabels,
