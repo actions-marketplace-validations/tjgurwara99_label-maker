@@ -155,7 +155,9 @@ func main() {
 
 	responseBody := bytes.NewBuffer(labelResponse)
 
-	request, err := http.NewRequest("POST", URL.(string), responseBody)
+	url := fmt.Sprintf("%s%s", URL.(string), "/labels")
+
+	request, err := http.NewRequest("POST", url, responseBody)
 	if err != nil {
 		fmt.Println("couldn't make a new request")
 		os.Exit(1)
