@@ -134,7 +134,8 @@ func main() {
 	var updateLabels []string
 
 	for key, value := range labels {
-		fmt.Printf("%s %s\n", key, value)
+		fmt.Println(issueTitle)
+		fmt.Printf("%v %v\n", key, value)
 	}
 
 	fmt.Printf("%s\n", updateLabels)
