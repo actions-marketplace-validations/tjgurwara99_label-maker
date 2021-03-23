@@ -1,0 +1,5 @@
+name: "Label Maker"
+description: "Makes labels for new issues"
+runs:
+    using: "docker"
+    image: "Dockerfile"
