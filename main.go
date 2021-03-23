@@ -144,7 +144,7 @@ func main() {
 		}
 	}
 
-	fmt.Println(updateLabels)
+	fmt.Printf("%s\n", updateLabels)
 
 	labelResponse, err := json.Marshal(map[string]interface{}{
 		"label": updateLabels,
