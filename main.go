@@ -174,6 +174,5 @@ func main() {
 		os.Exit(1)
 	}
 	defer response.Body.Close()
-
 	fmt.Println("Successfully added label")
 }
