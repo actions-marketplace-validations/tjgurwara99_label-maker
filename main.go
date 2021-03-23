@@ -65,10 +65,23 @@ func getLabels(repositoryURL interface{}) ([]interface{}, error) {
 
 func main() {
 	eventString := os.Getenv("GITHUB_EVENT_PATH")
+	jsonFile, err := os.Open(eventString)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 	var event map[string]interface{}
-	fmt.Println("It reached here")
-	fmt.Printf("%v", eventString)
-	err := json.Unmarshal([]byte(eventString), &event)
+
+	byteValue, err := ioutil.ReadAll(jsonFile)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	err = json.Unmarshal(byteValue, &event)
 
 	if err != nil {
 		fmt.Println(err)
