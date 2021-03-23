@@ -88,8 +88,8 @@ func main() {
 		updateLabels = append(updateLabels, label.Name)
 	}
 
-	labelResponse, err := json.Marshal(map[string]interface{}{
-		"label": updateLabels,
+	labelResponse, err := json.Marshal(map[string][]string{
+		"labels": updateLabels,
 	})
 
 	if err != nil {
