@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func getLabels(repositoryURL interface{}) ([]interface{}, error) {
+func getLabels(repositoryURL interface{}) ([]string, error) {
 
 	var url string
 
@@ -55,7 +55,7 @@ func getLabels(repositoryURL interface{}) ([]interface{}, error) {
 
 	fmt.Println(body)
 
-	var labels []interface{}
+	var labels []string
 
 	err = json.Unmarshal(body, &labels)
 
