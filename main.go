@@ -74,6 +74,8 @@ func main() {
 		os.Exit(1) // so that it raises error in the github action
 	}
 
+	fmt.Println("It reached here too")
+
 	issue, ok := event["issue"]
 
 	if !ok {
