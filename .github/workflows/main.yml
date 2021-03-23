@@ -12,3 +12,5 @@ jobs:
       - name: Label Maker action step
         uses: ./
         id: labelmaker
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
