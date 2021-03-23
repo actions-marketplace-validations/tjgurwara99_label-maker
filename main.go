@@ -67,6 +67,7 @@ func main() {
 	eventString := os.Getenv("GITHUB_EVENT_PATH")
 	var event map[string]interface{}
 	fmt.Println("It reached here")
+	fmt.Printf("%v", eventString)
 	err := json.Unmarshal([]byte(eventString), &event)
 
 	if err != nil {
