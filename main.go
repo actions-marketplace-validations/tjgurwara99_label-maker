@@ -88,8 +88,6 @@ func main() {
 		os.Exit(1) // so that it raises error in the github action
 	}
 
-	fmt.Println("It reached here too")
-
 	issue, ok := event["issue"]
 
 	if !ok {
@@ -174,5 +172,6 @@ func main() {
 		os.Exit(1)
 	}
 	defer response.Body.Close()
+	fmt.Println(ioutil.ReadAll(response.Body))
 	fmt.Println("Successfully added label")
 }
