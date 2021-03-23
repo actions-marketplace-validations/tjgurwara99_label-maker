@@ -5,75 +5,20 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
+	"strings"
+
+	"github.com/tjgurwara99/label-maker/github"
 )
 
-func getLabels(repositoryURL interface{}) ([]map[string]interface{}, error) {
-
-	var url string
-
-	switch repositoryURL.(type) {
-	case string:
-		url = repositoryURL.(string)
-	default:
-		fmt.Println("url not a string")
-		os.Exit(1)
-		//return error instead
-	}
-	url = fmt.Sprintf("%v/labels", url)
-
-	request, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		fmt.Println("couldn't make a new request")
-		os.Exit(1)
-
-		// return error instead
-	}
-
-	key := fmt.Sprintf("Bearer %v", os.Getenv("GITHUB_TOKEN"))
-	request.Header.Add("Authorization", key)
-	request.Header.Add("Accept", "application/vnd.github.v3+json")
-
-	response, err := http.DefaultClient.Do(request)
-
-	if err != nil {
-		// something
-	}
-
-	if response.Body != nil {
-		defer response.Body.Close()
-	}
-
-	body, err := ioutil.ReadAll(response.Body)
-
-	if err != nil {
-		// something
-		fmt.Println(err)
-	}
-
-	fmt.Println(body)
-
-	var labels []map[string]interface{}
-
-	err = json.Unmarshal(body, &labels)
-
-	if err != nil {
-		// return error
-		fmt.Println(err)
-	}
-	fmt.Printf("%s", labels)
-
-	return labels, nil
-}
-
 func main() {
-	eventString := os.Getenv("GITHUB_EVENT_PATH")
-	jsonFile, err := os.Open(eventString)
+	eventPath := os.Getenv("GITHUB_EVENT_PATH")
+	jsonFile, err := os.Open(eventPath)
 
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatalf("Error opening event Payload: %v\n", err)
 	}
 
 	var event map[string]interface{}
@@ -81,22 +26,19 @@ func main() {
 	byteValue, err := ioutil.ReadAll(jsonFile)
 
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatalf("Error converting json payload to []byte: %v", err)
 	}
 
 	err = json.Unmarshal(byteValue, &event)
 
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1) // so that it raises error in the github action
+		log.Fatalf("Error Unmarshalling the []byte of json payload to map[string]interface{}", err)
 	}
 
 	issue, ok := event["issue"]
 
 	if !ok {
-		fmt.Println("issue info: error parsing event hooks")
-		os.Exit(1)
+		log.Fatalf("Couldn't find issues field in payload: %v", err)
 	}
 
 	var repositoryURL interface{}
@@ -109,55 +51,50 @@ func main() {
 	case map[string]interface{}:
 		repositoryURL, ok = issue.(map[string]interface{})["repository_url"]
 		if !ok {
-			fmt.Println("repository url: unable to obtain repo url: problem with Unmarshalling")
-			os.Exit(1)
+			log.Fatalf("Couldn't repository url field in issue map[string]interface{}: %v", err)
 		}
 		issueTitle, ok = issue.(map[string]interface{})["title"]
 		if !ok {
-			// something
+			log.Fatalf("Couldn't find title field in issue map[string]interface{}: %v", err)
 		}
 		URL, ok = issue.(map[string]interface{})["url"]
 		if !ok {
-			// Something
+			log.Fatalf("Couldn't find url field in issue map[string]interface{}: %v", err)
 		}
 	default:
-		fmt.Println("repository url: unable to obtain repo url: problem with Unmarshalling")
-		os.Exit(1)
+		log.Fatal("Issue payload is not of type map[string]interface{}")
 	}
 
-	labels, err := getLabels(repositoryURL)
+	labels, err := github.GetLabels(repositoryURL.(string)) // maybe add a check to make sure repositoryURL type is string
 
 	if err != nil {
-		// something
+		log.Fatalf("Couldn't fetch labels: %v", err)
 	}
 
 	var updateLabels []string
 
-	for key, value := range labels {
-		fmt.Println(issueTitle)
-		fmt.Printf("%v %v\n", key, value)
+	for _, label := range labels {
+		if !strings.Contains(issueTitle.(string), label.Name) {
+			continue
+		}
+		updateLabels = append(updateLabels, label.Name)
 	}
-
-	fmt.Printf("%s\n", updateLabels)
 
 	labelResponse, err := json.Marshal(map[string]interface{}{
 		"label": updateLabels,
 	})
 
 	if err != nil {
-		// something
+		log.Fatalf("Error marshalling labels: %v", err)
 	}
 
 	responseBody := bytes.NewBuffer(labelResponse)
 
 	url := fmt.Sprintf("%s%s", URL.(string), "/labels")
 
-	fmt.Println(url)
-
 	request, err := http.NewRequest("POST", url, responseBody)
 	if err != nil {
-		fmt.Println("couldn't make a new request")
-		os.Exit(1)
+		log.Fatalf("Error write a new request with labels as buffer: %v", err)
 	}
 
 	key := fmt.Sprintf("Bearer %v", os.Getenv("GITHUB_TOKEN"))
@@ -167,10 +104,8 @@ func main() {
 	response, err := http.DefaultClient.Do(request)
 
 	if err != nil {
-		fmt.Println("error")
-		os.Exit(1)
+		log.Fatalf("Response error: %v", err)
 	}
 	defer response.Body.Close()
-	fmt.Println(ioutil.ReadAll(response.Body))
 	fmt.Println("Successfully added label")
 }
