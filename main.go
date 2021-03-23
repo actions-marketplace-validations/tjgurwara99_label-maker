@@ -65,10 +65,10 @@ func main() {
 		log.Fatal("Issue payload is not of type map[string]interface{}")
 	}
 
-	token := os.Getenv("TOKEN")
+	token := os.Getenv("INPUT_TOKEN")
 
 	if token == "" {
-		log.Fatal("Couldn't get environment variable repo-token")
+		log.Fatal("Couldn't get environment variable TOKEN")
 	}
 
 	token = fmt.Sprintf("bearer %v", token)
