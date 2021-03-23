@@ -3,3 +3,7 @@ description: "Makes labels for new issues"
 runs:
     using: "docker"
     image: "Dockerfile"
+    inputs:
+        TOKEN:
+            description: "Github token"
+            required: true
