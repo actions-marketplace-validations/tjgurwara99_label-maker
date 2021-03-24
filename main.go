@@ -115,9 +115,5 @@ func main() {
 	}
 	defer response.Body.Close()
 
-	if err != nil {
-		log.Fatalf("Error converting to []byte: %v", err)
-	}
-
 	fmt.Println("\nSuccessfully added label")
 }
