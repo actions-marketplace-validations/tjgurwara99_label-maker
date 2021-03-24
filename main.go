@@ -114,12 +114,10 @@ func main() {
 		log.Fatalf("Response error: %v", err)
 	}
 	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
 
 	if err != nil {
 		log.Fatalf("Error converting to []byte: %v", err)
 	}
 
-	fmt.Printf("%v", body)
-	fmt.Println("Successfully added label")
+	fmt.Println("\nSuccessfully added label")
 }
