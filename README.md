@@ -26,4 +26,4 @@ jobs:
 3. Commit these changes and add a new issue whose title contains one of your defined label names to test if it works.
 
 
-This project was inspired by (auto-label)[https://github.com/Renato66/auto-label] - a project made by (Renato99)[https://github.com/Renato66] - which is a more complete (and robust) solution to automatic labelling than this project. My usecase was a bit different than the one currently supported by (auto-label)[https://github.com/Renato66/auto-label] however, therefore I made this.
+This project was inspired by [auto-label](https://github.com/Renato66/auto-label) - a project made by [Renato99](https://github.com/Renato66) - which is a more complete (and robust) solution to automatic labelling than this project. However, my usecase was a bit different than the one currently supported by [auto-label](https://github.com/Renato66/auto-label), therefore I made this.
