@@ -1,5 +1,7 @@
 name: "Label Maker"
 description: "Makes labels for new issues"
+icon: "check"
+color: "black"
 inputs:
     token:
         description: "Github token"
