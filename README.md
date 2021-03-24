@@ -19,7 +19,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: tjgurwara99/label-maker@v0.1-Beta
+      - uses: tjgurwara99/label-maker@v0.1-beta
         with: 
           token: ${{ secrets.GITHUB_TOKEN }}
 ```
