@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 
@@ -38,7 +39,7 @@ func main() {
 
 	token = fmt.Sprintf("bearer %v", token)
 
-	labels, err := github.GetLabels(payload.Issue.RepositoryURL, token)
+	labels, err := github.GetLabels(payload.Repository.URL, token)
 
 	if err != nil {
 		log.Fatalf("Couldn't fetch labels: %v", err)
@@ -46,14 +47,35 @@ func main() {
 
 	var newLabels []string
 
+	issue := false
+
+	emptyPullRequest := github.PullRequest{}
+
+	if payload.PullRequest == emptyPullRequest {
+		issue = true
+	}
+
 	for _, label := range labels {
-		if !strings.Contains(strings.ToLower(payload.Issue.Title), strings.ToLower(label.Name)) {
+		if issue {
+			if !strings.Contains(strings.ToLower(payload.Issue.Title), strings.ToLower(label.Name)) {
+				continue
+			}
+			newLabels = append(newLabels, label.Name)
+			continue
+		}
+		if !strings.Contains(strings.ToLower(payload.PullRequest.Title), strings.ToLower(label.Name)) {
 			continue
 		}
 		newLabels = append(newLabels, label.Name)
 	}
 
-	response, err := github.AddLabels(newLabels, payload.Issue.URL, token)
+	var response *http.Response
+
+	if issue {
+		response, err = github.AddLabels(newLabels, payload.Issue.URL, token)
+	} else {
+		response, err = github.AddLabels(newLabels, payload.PullRequest.IssueURL, token)
+	}
 
 	if err != nil {
 		log.Fatalf("Response error: %v", err)
