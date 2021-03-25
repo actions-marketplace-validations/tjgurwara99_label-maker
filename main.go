@@ -47,7 +47,7 @@ func main() {
 	var newLabels []string
 
 	for _, label := range labels {
-		if !strings.Contains(event.Issue.Title, label.Name) {
+		if !strings.Contains(strings.ToLower(event.Issue.Title), strings.ToLower(label.Name)) {
 			continue
 		}
 		newLabels = append(newLabels, label.Name)
