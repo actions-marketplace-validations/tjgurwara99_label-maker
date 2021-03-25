@@ -1,6 +1,6 @@
 name: "Label Maker"
 author: "Taj"
-description: "Makes labels for new issues"
+description: "Add labels for issues and pull requests based on its title"
 branding:
     icon: "check"
     color: "black"
