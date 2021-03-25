@@ -24,7 +24,7 @@ func main() {
 		log.Fatalf("Error converting json payload to []byte: %v", err)
 	}
 
-	event, err := github.GetEventInfo(byteValue)
+	payload, err := github.GetPayloadInfo(byteValue)
 
 	if err != nil {
 		log.Fatalf("Couldn't get event payload stored in Event struct: %v", err)
@@ -38,7 +38,7 @@ func main() {
 
 	token = fmt.Sprintf("bearer %v", token)
 
-	labels, err := github.GetLabels(event.RepositoryURL, token)
+	labels, err := github.GetLabels(payload.Issue.RepositoryURL, token)
 
 	if err != nil {
 		log.Fatalf("Couldn't fetch labels: %v", err)
@@ -47,13 +47,13 @@ func main() {
 	var newLabels []string
 
 	for _, label := range labels {
-		if !strings.Contains(strings.ToLower(event.Issue.Title), strings.ToLower(label.Name)) {
+		if !strings.Contains(strings.ToLower(payload.Issue.Title), strings.ToLower(label.Name)) {
 			continue
 		}
 		newLabels = append(newLabels, label.Name)
 	}
 
-	response, err := github.AddLabels(newLabels, event.Issue.URL, token)
+	response, err := github.AddLabels(newLabels, payload.Issue.URL, token)
 
 	if err != nil {
 		log.Fatalf("Response error: %v", err)
