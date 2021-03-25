@@ -4,7 +4,7 @@ I needed very simple automatic labeller for my private use. I like to write labe
 
 Feel free to use this. If you would like to recommend some changes, please open an issue and I'll see what I can do.
 
-I will be adding further changes soon so that it will also be able to handle Pull Requests - doesn't seem to be that hard now that everything works as I expect it to. I will try to find a way to run these tests locally. Since its inside a docker, my current thinking process is that I will add some environment variables and test it inside that with some custom event payloads.
+With v0.1.2 we now have support for Pull Request labelling too. Now you can just add the desired label within the title of your Pull Request and this will automatically add the label that matched the title.
 
 Steps to implement it in your repository:
 
@@ -16,12 +16,12 @@ on:
   issues:
     types: ['opened', 'edited']
   pull_request:
-    types: ['opened']
+    types: ['opened', 'edited']
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: tjgurwara99/label-maker@v0.1-beta
+      - uses: tjgurwara99/label-maker@v0.1.2
         with: 
           token: ${{ secrets.GITHUB_TOKEN }}
 ```
