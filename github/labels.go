@@ -1,6 +1,7 @@
 package github
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -56,4 +57,31 @@ func GetLabels(repositoryURL string, token string) ([]Label, error) {
 	}
 
 	return labels, nil
+}
+
+// AddLabels adds given labels to the issue/pull request and returns the server's response for post processing
+func AddLabels(newLabels []string, issueURL, authToken string) (*http.Response, error) {
+	labelResponse, err := json.Marshal(map[string][]string{
+		"labels": newLabels,
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("Error marshalling labels to map[string][]string: %v", err)
+	}
+
+	// converting labelResponse to bytes for making a new request
+	responseBody := bytes.NewBuffer(labelResponse)
+
+	url := fmt.Sprintf("%s%s", issueURL, "/labels")
+
+	request, err := http.NewRequest("POST", url, responseBody)
+
+	if err != nil {
+		return nil, fmt.Errorf("Error: Writing a new request with labels as bytes buffer: %v", err)
+	}
+
+	request.Header.Add("Authorization", authToken)
+	request.Header.Add("Accept", "application/vnd.github.v3+json")
+
+	return http.DefaultClient.Do(request)
 }
