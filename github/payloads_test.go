@@ -37,21 +37,32 @@ func TestGetPayloadInfo(t *testing.T) {
 	}
 
 	testCaseIssue := github.Issue{
-		Title:         "Spelling error in the README file",
-		URL:           "https://api.github.com/repos/Codertocat/Hello-World/issues/1",
-		RepositoryURL: "https://api.github.com/repos/Codertocat/Hello-World",
+		Title: "Spelling error in the README file",
+		URL:   "https://api.github.com/repos/Codertocat/Hello-World/issues/1",
+		Body:  "It looks like you accidently spelled 'commit' with two 't's.",
 	}
 
+	testRepository := github.Repository{
+		URL: "https://api.github.com/repos/Codertocat/Hello-World",
+	}
+
+	testCasePullRequest := github.PullRequest{}
+
 	testCase := github.Payload{
-		Action: "edited",
-		Issue:  testCaseIssue,
+		Action:     "edited",
+		Issue:      testCaseIssue,
+		Repository: testRepository,
 	}
 
 	if event.Issue != testCase.Issue {
-		t.Errorf("Test Failed: Issue not equivalent")
+		t.Errorf("Test Failed: Issue not equivalent: Expected: %#v,\nReceived : %#v\n", testCaseIssue, event.Issue)
 	}
 
 	if event.Action != testCase.Action {
-		t.Errorf("Test Failed: Repository URL not equivalent")
+		t.Errorf("Test Failed: Repository URL not equivalent: Expected: %#v,\nReceived : %#v\n", testCase.Action, event.Action)
+	}
+
+	if event.PullRequest != testCasePullRequest {
+		t.Errorf("Test Failed: Pull Request information not equivalent: Expected: %#v,\nReceived: %#v\n", testCasePullRequest, event.PullRequest)
 	}
 }
