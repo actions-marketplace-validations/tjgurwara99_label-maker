@@ -39,7 +39,7 @@ func TestGetPayloadInfo(t *testing.T) {
 	testCaseIssue := github.Issue{
 		Title: "Spelling error in the README file",
 		URL:   "https://api.github.com/repos/Codertocat/Hello-World/issues/1",
-		Body:  "It looks like you accidently spelled 'commit' with two 't's.",
+		Body:  "It looks like you accidentally spelled 'commit' with two 't's.",
 	}
 
 	testRepository := github.Repository{

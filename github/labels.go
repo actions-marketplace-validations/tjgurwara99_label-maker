@@ -53,7 +53,7 @@ func GetLabels(repositoryURL string, token string) ([]Label, error) {
 	err = json.Unmarshal(body, &labels)
 
 	if err != nil {
-		return nil, fmt.Errorf("problem unmarshalling the reponse body: %v", err)
+		return nil, fmt.Errorf("problem unmarshalling the response body: %v", err)
 	}
 
 	return labels, nil
