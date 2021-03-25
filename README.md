@@ -14,6 +14,8 @@ Steps to implement it in your repository:
 name: Labeling issue 
 on:
   issues:
+    types: ['opened', 'edited']
+  pull_request:
     types: ['opened']
 jobs:
   build:
