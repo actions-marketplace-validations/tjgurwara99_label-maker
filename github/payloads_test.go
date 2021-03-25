@@ -9,14 +9,14 @@ import (
 	"github.com/tjgurwara99/label-maker/github"
 )
 
-func TestGetEventInfo(t *testing.T) {
+func TestGetPayloadInfo(t *testing.T) {
 	currentWD, err := os.Getwd()
 	if err != nil {
 		t.Errorf("Couldn't get the current working directory: %v", err)
 	}
 
-	// The following payload has been taken from the GitHub
-	// API documentation - you can find it at:
+	// The following payload is an example payload which has been
+	// taken from the GitHub API documentation - you can find it at:
 	// https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads#issues
 	jsonFile, err := os.Open(fmt.Sprintf("%s/payload.json", currentWD))
 
@@ -30,27 +30,28 @@ func TestGetEventInfo(t *testing.T) {
 		t.Errorf("Conversion failed: *os.File to []Byte: %v", err)
 	}
 
-	event, err := github.GetEventInfo(payloadInBytes)
+	event, err := github.GetPayloadInfo(payloadInBytes)
 
 	if err != nil {
 		t.Errorf("Failed to store payload in Event struct: %v", err)
 	}
 
 	testCaseIssue := github.Issue{
-		Title: "Spelling error in the README file",
-		URL:   "https://api.github.com/repos/Codertocat/Hello-World/issues/1",
+		Title:         "Spelling error in the README file",
+		URL:           "https://api.github.com/repos/Codertocat/Hello-World/issues/1",
+		RepositoryURL: "https://api.github.com/repos/Codertocat/Hello-World",
 	}
 
-	testCase := github.Event{
-		RepositoryURL: "https://api.github.com/repos/Codertocat/Hello-World",
-		Issue:         testCaseIssue,
+	testCase := github.Payload{
+		Action: "edited",
+		Issue:  testCaseIssue,
 	}
 
 	if event.Issue != testCase.Issue {
 		t.Errorf("Test Failed: Issue not equivalent")
 	}
 
-	if event.RepositoryURL != testCase.RepositoryURL {
+	if event.Action != testCase.Action {
 		t.Errorf("Test Failed: Repository URL not equivalent")
 	}
 }
